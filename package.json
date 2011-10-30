@@ -1,0 +1,18 @@
+{
+  "author": "Ross Brodbeck <hross@hross.com> (http://hross.net/)",
+  "name": "opengl",
+  "description": "OpenGL bindings for node",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hross/node-opengl.git"
+  },
+  "main": "opengl.js",
+  "engines": {
+    "node": "0.4"
+  },
+  "dependencies": {
+    "sdl": ">= 0.1.0"
+  },
+  "devDependencies": {}
+}
