@@ -8,7 +8,7 @@
 
 using namespace v8;
 
-namespace gl {
+namespace opengl {
 
   static Handle<Value> Clear(const Arguments& args);
   static Handle<Value> Enable(const Arguments& args);

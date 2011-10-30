@@ -2,8 +2,11 @@
 
 ## 0. Notes
 
-This package is a companion to the [node-sdl](https://github.com/creationx/node-sdl) package. It was built so the
+This package is a companion to the [node-sdl](https://github.com/creationix/node-sdl) package. It was built so the
 OpenGL bindings for SDL could remain separate from the SDL library.
+
+If you are looking for something else try the
+[node-webgl](https://github.com/pufuwozu/node-webgl) project.
 
 ## 1. Installation
 
