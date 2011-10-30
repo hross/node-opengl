@@ -9,25 +9,25 @@ extern "C" void
 init(Handle<Object> target)
 {
 
-  NODE_SET_METHOD(target, "clear", gl::Clear);
-  NODE_SET_METHOD(target, "enable", gl::Enable);
-  NODE_SET_METHOD(target, "disable", gl::Disable);
-  NODE_SET_METHOD(target, "begin", gl::Begin);
-  NODE_SET_METHOD(target, "end", gl::End);
-  NODE_SET_METHOD(target, "matrixMode", gl::MatrixMode);
+  NODE_SET_METHOD(target, "clear", opengl::Clear);
+  NODE_SET_METHOD(target, "enable", opengl::Enable);
+  NODE_SET_METHOD(target, "disable", opengl::Disable);
+  NODE_SET_METHOD(target, "begin", opengl::Begin);
+  NODE_SET_METHOD(target, "end", opengl::End);
+  NODE_SET_METHOD(target, "matrixMode", opengl::MatrixMode);
 
-  NODE_SET_METHOD(target, "vertex3", gl::Vertex3);
-  NODE_SET_METHOD(target, "normal3", gl::Normal3);
+  NODE_SET_METHOD(target, "vertex3", opengl::Vertex3);
+  NODE_SET_METHOD(target, "normal3", opengl::Normal3);
 
-  NODE_SET_METHOD(target, "light", gl::Light);
+  NODE_SET_METHOD(target, "light", opengl::Light);
 
-  NODE_SET_METHOD(target, "translate", gl::Translate);
-  NODE_SET_METHOD(target, "rotate", gl::Rotate);
-  NODE_SET_METHOD(target, "ortho", gl::Ortho);
+  NODE_SET_METHOD(target, "translate", opengl::Translate);
+  NODE_SET_METHOD(target, "rotate", opengl::Rotate);
+  NODE_SET_METHOD(target, "ortho", opengl::Ortho);
 
   /* glu* Functions */
-  NODE_SET_METHOD(target, "perspective", gl::Perspective);
-  NODE_SET_METHOD(target, "lookAt", gl::LookAt);
+  NODE_SET_METHOD(target, "perspective", opengl::Perspective);
+  NODE_SET_METHOD(target, "lookAt", opengl::LookAt);
 
   /* glClear Constants */
   target->Set(String::New("COLOR_BUFFER_BIT"), Integer::New(GL_COLOR_BUFFER_BIT), ReadOnly);
@@ -79,7 +79,7 @@ init(Handle<Object> target)
 
 } 
 
-Handle<Value> gl::Clear(const Arguments& args) {
+Handle<Value> opengl::Clear(const Arguments& args) {
   HandleScope scope;
 
   if (!(args.Length() == 1 && args[0]->IsNumber())) {
@@ -91,7 +91,7 @@ Handle<Value> gl::Clear(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Enable(const Arguments& args) {
+Handle<Value> opengl::Enable(const Arguments& args) {
   HandleScope scope;
 
   if (!(args.Length() == 1 && args[0]->IsNumber())) {
@@ -103,7 +103,7 @@ Handle<Value> gl::Enable(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Disable(const Arguments& args) {
+Handle<Value> opengl::Disable(const Arguments& args) {
   HandleScope scope;
 
   if (!(args.Length() == 1 && args[0]->IsNumber())) {
@@ -115,7 +115,7 @@ Handle<Value> gl::Disable(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Begin(const Arguments& args) {
+Handle<Value> opengl::Begin(const Arguments& args) {
   HandleScope scope;
 
   if (!(args.Length() == 1 && args[0]->IsNumber())) {
@@ -127,7 +127,7 @@ Handle<Value> gl::Begin(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::End(const Arguments& args) {
+Handle<Value> opengl::End(const Arguments& args) {
   HandleScope scope;
 
   if (!(args.Length() == 0)) {
@@ -139,7 +139,7 @@ Handle<Value> gl::End(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::MatrixMode(const Arguments& args) {
+Handle<Value> opengl::MatrixMode(const Arguments& args) {
   HandleScope scope;
 
   if (!(args.Length() == 1 && args[0]->IsNumber())) {
@@ -151,7 +151,7 @@ Handle<Value> gl::MatrixMode(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Vertex3(const Arguments& args) {
+Handle<Value> opengl::Vertex3(const Arguments& args) {
   
   if (!(args.Length() == 1 && args[0]->IsArray())) {
     return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected Vertex3(Array)")));
@@ -170,7 +170,7 @@ Handle<Value> gl::Vertex3(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Normal3(const Arguments& args) {
+Handle<Value> opengl::Normal3(const Arguments& args) {
   
   if (!(args.Length() == 1 && args[0]->IsArray())) {
     return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected Normal3(Array)")));
@@ -189,7 +189,7 @@ Handle<Value> gl::Normal3(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Light(const Arguments& args) {
+Handle<Value> opengl::Light(const Arguments& args) {
 
   if(!(args.Length() == 3 && args[0]->IsNumber() && args[1]->IsNumber() && args[2]->IsArray())) {
     return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected Light(Number, Number, Array)")));
@@ -208,7 +208,7 @@ Handle<Value> gl::Light(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Translate(const Arguments& args) {
+Handle<Value> opengl::Translate(const Arguments& args) {
 
   if(!(args.Length() == 3 && args[0]->IsNumber() && args[1]->IsNumber() && args[2]->IsNumber())) {
     return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected Translate(Number, Number, Number)")));
@@ -219,7 +219,7 @@ Handle<Value> gl::Translate(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Rotate(const Arguments& args) {
+Handle<Value> opengl::Rotate(const Arguments& args) {
 
   if(!(args.Length() == 4 && args[0]->IsNumber() && args[1]->IsNumber() && args[2]->IsNumber() && args[3]->IsNumber())) {
     return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected Rotate(Number, Number, Number, Number)")));
@@ -230,7 +230,7 @@ Handle<Value> gl::Rotate(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Ortho(const Arguments& args) {
+Handle<Value> opengl::Ortho(const Arguments& args) {
 
   if(!(args.Length() == 6 && args[0]->IsNumber() && args[1]->IsNumber() && args[2]->IsNumber()
         && args[3]->IsNumber() && args[4]->IsNumber() && args[5]->IsNumber())) {
@@ -243,7 +243,7 @@ Handle<Value> gl::Ortho(const Arguments& args) {
   return Undefined();
 }
 
-Handle<Value> gl::Perspective(const Arguments& args) {
+Handle<Value> opengl::Perspective(const Arguments& args) {
 
   if(!(args.Length() == 4 && args[0]->IsNumber() && args[1]->IsNumber() && args[2]->IsNumber() && args[3]->IsNumber())) {
     return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected Perspective(Number, Number, Number, Number)")));
@@ -255,7 +255,7 @@ Handle<Value> gl::Perspective(const Arguments& args) {
 }
 
 
-Handle<Value> gl::LookAt(const Arguments& args) {
+Handle<Value> opengl::LookAt(const Arguments& args) {
 
   if(!(args.Length() == 9 && args[0]->IsNumber() && args[1]->IsNumber() && args[2]->IsNumber()
         && args[3]->IsNumber() && args[4]->IsNumber() && args[5]->IsNumber() && args[6]->IsNumber()
