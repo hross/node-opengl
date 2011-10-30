@@ -1,1 +1,1 @@
-var GL = module.exports = require('./build/default/node-gl.node');
+var GL = module.exports = require('./build/default/node-opengl.node');
