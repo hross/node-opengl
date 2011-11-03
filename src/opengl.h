@@ -15,12 +15,26 @@ namespace opengl {
   static Handle<Value> Disable(const Arguments& args);
   static Handle<Value> Begin(const Arguments& args);
   static Handle<Value> End(const Arguments& args);
+
   static Handle<Value> MatrixMode(const Arguments& args);
+  static Handle<Value> PushMatrix(const Arguments& args);
+  static Handle<Value> PopMatrix(const Arguments& args);
+
+  static Handle<Value> PushAttrib(const Arguments& args);
+  static Handle<Value> PopAttrib(const Arguments& args);
+
 
   static Handle<Value> Vertex3(const Arguments& args);
   static Handle<Value> Normal3(const Arguments& args);
+  static Handle<Value> Color3(const Arguments& args);
+
+  static Handle<Value> TexCoord2(const Arguments& args);
 
   static Handle<Value> Light(const Arguments& args);
+  static Handle<Value> FrontFace(const Arguments& args);
+  static Handle<Value> CullFace(const Arguments& args);
+
+  static Handle<Value> BindTexture(const Arguments& args);
 
   static Handle<Value> Translate(const Arguments& args);
   static Handle<Value> Rotate(const Arguments& args);

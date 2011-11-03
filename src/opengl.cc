@@ -14,12 +14,26 @@ init(Handle<Object> target)
   NODE_SET_METHOD(target, "disable", opengl::Disable);
   NODE_SET_METHOD(target, "begin", opengl::Begin);
   NODE_SET_METHOD(target, "end", opengl::End);
+  
   NODE_SET_METHOD(target, "matrixMode", opengl::MatrixMode);
+  NODE_SET_METHOD(target, "pushMatrix", opengl::PushMatrix);
+  NODE_SET_METHOD(target, "popMatrix", opengl::PopMatrix);
+
+  NODE_SET_METHOD(target, "pushAttrib", opengl::PushAttrib);
+  NODE_SET_METHOD(target, "popAttrib", opengl::PopAttrib);
 
   NODE_SET_METHOD(target, "vertex3", opengl::Vertex3);
   NODE_SET_METHOD(target, "normal3", opengl::Normal3);
+  NODE_SET_METHOD(target, "color3", opengl::Color3);
+  
+  NODE_SET_METHOD(target, "texCoord2", opengl::TexCoord2);
 
   NODE_SET_METHOD(target, "light", opengl::Light);
+  NODE_SET_METHOD(target, "frontFace", opengl::FrontFace);
+  NODE_SET_METHOD(target, "cullFace", opengl::CullFace);
+
+  NODE_SET_METHOD(target, "bindTexture", opengl::BindTexture);
+
 
   NODE_SET_METHOD(target, "translate", opengl::Translate);
   NODE_SET_METHOD(target, "rotate", opengl::Rotate);
@@ -36,6 +50,7 @@ init(Handle<Object> target)
   target->Set(String::New("STENCIL_BUFFER_BIT"), Integer::New(GL_STENCIL_BUFFER_BIT), ReadOnly);
 
   /* glEnable */
+  target->Set(String::New("CULL_FACE"), Integer::New(GL_CULL_FACE), ReadOnly);
   target->Set(String::New("DEPTH_TEST"), Integer::New(GL_DEPTH_TEST), ReadOnly);
   target->Set(String::New("DITHER"), Integer::New(GL_DITHER), ReadOnly);
   target->Set(String::New("LIGHTING"), Integer::New(GL_LIGHTING), ReadOnly);
@@ -47,6 +62,9 @@ init(Handle<Object> target)
   target->Set(String::New("LIGHT5"), Integer::New(GL_LIGHT5), ReadOnly);
   target->Set(String::New("LIGHT6"), Integer::New(GL_LIGHT6), ReadOnly);
 
+  /* glPushAttrib */
+  target->Set(String::New("POLYGON_BIT"), Integer::New(GL_POLYGON_BIT), ReadOnly);
+  
   /* glBegin */
   target->Set(String::New("POINTS"), Integer::New(GL_POINTS), ReadOnly);
   target->Set(String::New("LINES"), Integer::New(GL_LINES), ReadOnly);
@@ -77,6 +95,14 @@ init(Handle<Object> target)
   target->Set(String::New("LINEAR_ATTENUATION"), Integer::New(GL_LINEAR_ATTENUATION), ReadOnly);
   target->Set(String::New("QUADRATIC_ATTENUATION"), Integer::New(GL_QUADRATIC_ATTENUATION), ReadOnly);
 
+  /* glFrontFace */
+  target->Set(String::New("CW"), Integer::New(GL_CW), ReadOnly);
+  
+  /* glCullFace */
+  target->Set(String::New("BACK"), Integer::New(GL_BACK), ReadOnly);
+
+  /* glBindTexture */
+  target->Set(String::New("TEXTURE_2D"), Integer::New(GL_TEXTURE_2D), ReadOnly);
 } 
 
 Handle<Value> opengl::Clear(const Arguments& args) {
@@ -151,6 +177,55 @@ Handle<Value> opengl::MatrixMode(const Arguments& args) {
   return Undefined();
 }
 
+Handle<Value> opengl::PushMatrix(const Arguments& args) {
+  HandleScope scope;
+
+  if (!(args.Length() == 0)) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected PushMatrix()")));
+  }
+
+  glPushMatrix();
+
+  return Undefined();
+}
+
+Handle<Value> opengl::PopMatrix(const Arguments& args) {
+  HandleScope scope;
+
+  if (!(args.Length() == 0)) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected PopMatrix()")));
+  }
+
+  glPopMatrix();
+
+  return Undefined();
+}
+
+Handle<Value> opengl::PushAttrib(const Arguments& args) {
+  HandleScope scope;
+
+  if (!(args.Length() == 1 && args[0]->IsNumber())) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected PushAttrib(Number)")));
+  }
+
+  glPushAttrib((GLbitfield) args[0]->Int32Value());
+
+  return Undefined();
+}
+
+Handle<Value> opengl::PopAttrib(const Arguments& args) {
+  HandleScope scope;
+
+  if (!(args.Length() == 0)) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected PopAttrib()")));
+  }
+
+  glPopAttrib();
+
+  return Undefined();
+}
+
+
 Handle<Value> opengl::Vertex3(const Arguments& args) {
   
   if (!(args.Length() == 1 && args[0]->IsArray())) {
@@ -189,6 +264,36 @@ Handle<Value> opengl::Normal3(const Arguments& args) {
   return Undefined();
 }
 
+Handle<Value> opengl::Color3(const Arguments& args) {
+  
+  if (!(args.Length() == 1 && args[0]->IsArray())) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected Color3(Array)")));
+  }
+
+  // create vertex array
+  Handle<Object> arr = args[0]->ToObject();
+  GLdouble v[3];
+
+  v[0] = arr->Get(String::New("0"))->NumberValue();
+  v[1] = arr->Get(String::New("1"))->NumberValue();
+  v[2] = arr->Get(String::New("2"))->NumberValue();
+
+  glColor3dv(v);
+
+  return Undefined();
+}
+
+Handle<Value> opengl::TexCoord2(const Arguments& args) {
+
+  if(!(args.Length() == 3 && args[0]->IsNumber() && args[1]->IsNumber())) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected TexCoord2(Number, Number)")));
+  }
+
+  glTexCoord2d((GLdouble) args[0]->NumberValue(), (GLdouble) args[1]->NumberValue());
+
+  return Undefined();
+}
+
 Handle<Value> opengl::Light(const Arguments& args) {
 
   if(!(args.Length() == 3 && args[0]->IsNumber() && args[1]->IsNumber() && args[2]->IsArray())) {
@@ -204,6 +309,36 @@ Handle<Value> opengl::Light(const Arguments& args) {
   l[2] = (float) arr->Get(String::New("2"))->NumberValue();
 
   glLightfv((GLenum) args[0]->Int32Value(), (GLenum) args[1]->Int32Value(), l);
+
+  return Undefined();
+}
+
+Handle<Value> opengl::FrontFace(const Arguments& args) {
+  if (!(args.Length() == 1 && args[0]->IsNumber())) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected FrontFace(Number)")));
+  }
+
+  glFrontFace((GLenum) args[0]->Int32Value());
+
+  return Undefined();
+}
+
+Handle<Value> opengl::CullFace(const Arguments& args) {
+  if (!(args.Length() == 1 && args[0]->IsNumber())) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected CullFace(Number)")));
+  }
+
+  glCullFace((GLenum) args[0]->Int32Value());
+
+  return Undefined();
+}
+
+Handle<Value> opengl::BindTexture(const Arguments& args) {
+  if (!(args.Length() == 1 && args[0]->IsNumber() && args[1]->IsNumber())) {
+    return ThrowException(Exception::TypeError(String::New("Invalid arguments: Expected BindTexture(Number, Number)")));
+  }
+
+  glBindTexture((GLenum) args[0]->Int32Value(), (GLuint) args[1]->Int32Value());
 
   return Undefined();
 }
